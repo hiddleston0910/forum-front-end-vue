@@ -1,6 +1,6 @@
 <template>
   <div class="container py-5">
-    <form class="w-100">
+    <form class="w-100" @submit.stop.prevent="handleSubmit">
       <div class="text-center mb-4">
         <h1 class="h3 mb-3 font-weight-normal">
           Sign Up
@@ -11,6 +11,7 @@
         <label for="name">Name</label>
         <input
           id="name"
+          v-model="name"
           name="name"
           type="text"
           class="form-control"
@@ -25,6 +26,7 @@
         <label for="email">Email</label>
         <input
           id="email"
+          v-model="email"
           name="email"
           type="email"
           class="form-control"
@@ -38,6 +40,7 @@
         <label for="password">Password</label>
         <input
           id="password"
+          v-model="password"
           name="password"
           type="password"
           class="form-control"
@@ -51,6 +54,7 @@
         <label for="password-check">Password Check</label>
         <input
           id="password-check"
+          v-model="passwordCheck"
           name="passwordCheck"
           type="password"
           class="form-control"
@@ -61,7 +65,7 @@
       </div>
 
       <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">
-        Submit
+        {{ isProcessing ? '處理中...' : 'Submit' }}
       </button>
 
       <div class="text-center mb-3">
@@ -80,5 +84,71 @@
 </template>
 
 <script>
-  export default {}
+  import authorizationAPI from '../apis/authorization'
+  import { Toast } from '../utils/helpers'
+
+  export default {
+    name: 'SignUp',
+    data() {
+      return {
+        name: '',
+        email: '',
+        password: '',
+        passwordCheck: '',
+        isProcessing: false,
+      }
+    },
+    methods: {
+      async handleSubmit() {
+        if (
+          !this.name ||
+          !this.email ||
+          !this.password ||
+          !this.passwordCheck
+        ) {
+          Toast.fire({
+            icon: 'warning',
+            title: '需填寫每個欄位資料',
+          })
+          return
+        }
+
+        if (this.password !== this.passwordCheck) {
+          Toast.fire({
+            icon: 'warning',
+            title: '兩次密碼輸入不相符，請再次確認',
+          })
+          return
+        }
+
+        try {
+          this.isProcessing = true
+
+          const { data } = await authorizationAPI.signUp({
+            name: this.name,
+            email: this.email,
+            password: this.password,
+            passwordCheck: this.passwordCheck,
+          })
+
+          if (data.status === 'error') {
+            throw new Error(data.message)
+          }
+
+          Toast.fire({
+            icon: 'success',
+            title: data.message,
+          })
+
+          this.$router.push('/signin')
+        } catch (error) {
+          this.isProcessing = false
+          Toast.fire({
+            icon: 'warning',
+            title: '註冊發生錯誤，請稍後再試',
+          })
+        }
+      },
+    },
+  }
 </script>
