@@ -79,14 +79,22 @@
   export default {
     name: 'RestaurantDetail',
     props: {
-      initalRestaurant: {
+      initialRestaurant: {
         type: Object,
       },
     },
     data() {
       return {
-        restaurant: this.initalRestaurant,
+        restaurant: this.initialRestaurant,
       }
+    },
+    watch: {
+      initialRestaurant(newValue) {
+        this.restaurant = {
+          ...this.restaurant,
+          ...newValue,
+        }
+      },
     },
     methods: {
       addFavorite() {

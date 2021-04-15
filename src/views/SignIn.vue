@@ -97,6 +97,8 @@
 
           localStorage.setItem('token', data.token)
 
+          this.$store.commit('setCurrentUser', data.user)
+
           // 成功登入後轉址到餐廳首頁
           this.$router.push('/restaurants')
         } catch (error) {
