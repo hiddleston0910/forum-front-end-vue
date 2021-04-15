@@ -26,30 +26,28 @@
               <strong>{{ user.Followers.length }}</strong> followers (追隨者)
             </li>
           </ul>
-          <template v-if="!isCurrentUser">
-            <router-link
-              :to="{ name: 'user-edit', params: { id: user.id } }"
-              class="btn btn-primary"
-            >
-              Edit
-            </router-link>
-            <button
-              v-if="isFollowed"
-              type="button"
-              class="btn btn-danger"
-              @click.stop.prevent="deleteFollowing(user.id)"
-            >
-              取消追蹤
-            </button>
-            <button
-              v-else
-              type="button"
-              class="btn btn-primary"
-              @click.stop.prevent="addFollowing(user.id)"
-            >
-              追蹤
-            </button>
-          </template>
+          <router-link
+            :to="{ name: 'user-edit', params: { id: user.id } }"
+            class="btn btn-primary"
+          >
+            Edit
+          </router-link>
+          <button
+            v-if="!isCurrentUser || isCurrentUser"
+            type="button"
+            class="btn btn-danger"
+            @click.stop.prevent="deleteFollowing(user.id)"
+          >
+            取消追蹤
+          </button>
+          <button
+            v-else
+            type="button"
+            class="btn btn-primary"
+            @click.stop.prevent="addFollowing(user.id)"
+          >
+            追蹤
+          </button>
         </div>
       </div>
     </div>
