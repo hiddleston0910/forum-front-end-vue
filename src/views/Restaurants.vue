@@ -1,32 +1,40 @@
 <template>
   <div class="container py-5">
     <NavTabs />
-    <!-- 餐廳類別標籤 RestaurantsNavPills -->
-    <RestaurantsNavPills :categories="categories" />
+    <Spinner v-if="isLoading" />
+    <template v-else>
+      <!-- 餐廳類別標籤 RestaurantsNavPills -->
+      <RestaurantsNavPills :categories="categories" />
 
-    <div class="row">
-      <!-- 餐廳卡片 RestaurantCard-->
-      <RestaurantCard
-        v-for="restaurant in restaurants"
-        :key="restaurant.id"
-        :initial-restaurant="restaurant"
+      <div class="row">
+        <!-- 餐廳卡片 RestaurantCard-->
+        <RestaurantCard
+          v-for="restaurant in restaurants"
+          :key="restaurant.id"
+          :initial-restaurant="restaurant"
+        />
+      </div>
+
+      <!-- 分頁標籤 RestaurantPagination -->
+      <RestaurantsPagination
+        v-if="totalPage.length > 1"
+        :current-page="currentPage"
+        :total-page="totalPage"
+        :category-id="categoryId"
+        :previous-page="previousPage"
+        :next-page="nextPage"
       />
-    </div>
 
-    <!-- 分頁標籤 RestaurantPagination -->
-    <RestaurantsPagination
-      v-if="totalPage.length > 1"
-      :current-page="currentPage"
-      :total-page="totalPage"
-      :category-id="categoryId"
-      :previous-page="previousPage"
-      :next-page="nextPage"
-    />
+      <div v-if="restaurants.length < 1">
+        此類別目前無餐廳資料
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
   import NavTabs from './../components/NavTabs'
+  import Spinner from '../components/Spinner'
   import RestaurantCard from './../components/RestaurantCard'
   import RestaurantsNavPills from './../components/RestaurantsNavPills'
   import RestaurantsPagination from './../components/RestaurantsPagination'
@@ -40,6 +48,7 @@
       RestaurantCard,
       RestaurantsNavPills,
       RestaurantsPagination,
+      Spinner,
     },
     data() {
       return {
@@ -50,6 +59,7 @@
         totalPage: [],
         previousPage: -1,
         nextPage: -1,
+        isLoading: true,
       }
     },
     created() {
@@ -59,13 +69,14 @@
     // 使用 beforeRouteUpdate 方法取得使用者路由變化
     beforeRouteUpdate(to, from, next) {
       const { page = '', categoryId = '' } = to.query
-      console.log('page: ', page, 'id: ', categoryId)
-      // this.fetchRestaurants({ queryPage: page, queryCategoryId: categoryId })
+      // console.log('page: ', page, 'id: ', categoryId)
+      this.fetchRestaurants({ queryPage: page, queryCategoryId: categoryId })
       next()
     },
     methods: {
       async fetchRestaurants({ queryPage, queryCategoryId }) {
         try {
+          this.isLoading = true
           const response = await restaurantsAPI.getRestaurants({
             page: queryPage,
             categoryId: queryCategoryId,
@@ -87,7 +98,9 @@
           this.totalPage = totalPage
           this.previousPage = prev
           this.nextPage = next
+          this.isLoading = false
         } catch (error) {
+          this.isLoading = false
           console.log('error', error)
           Toast.fire({
             icon: 'error',

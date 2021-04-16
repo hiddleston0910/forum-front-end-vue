@@ -124,3 +124,12 @@
     },
   }
 </script>
+
+<style scoped>
+  .col-lg-8 p,
+    .contact-info-wrap li,
+    .contact-info-wrap strong {
+      font-size: 17px;
+      font-family: serif;
+    }
+</style>

@@ -62,7 +62,6 @@
     },
     watch: {
       currentUser(user) {
-        console.log('watch currentUser ', user)
         this.setUser(user.id)
       },
     },
@@ -113,6 +112,8 @@
 
           this.$router.push({ name: 'user', params: { id: this.id } })
         } catch (error) {
+          console.log('handleSubmit Error: ', error)
+
           this.isProcessing = false
 
           Toast.fire({

@@ -27,3 +27,27 @@
     },
   }
 </script>
+
+<style scoped>
+  .nav-pills {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem !important;
+    }
+
+    .nav-pills .nav-link {
+      margin-right: 7px;
+      margin-bottom: 7px;
+      padding: 5px 10px 3px;
+      border: 1px solid #a1a1a1;
+      color: #4d4d4d;
+      transition: none;
+    }
+
+    .nav-pills .nav-link.active,
+    .nav-pills .show > .nav-link {
+      border-width: 2px;
+      border-color: #bd2333;
+      background-color: transparent;
+    }
+</style>

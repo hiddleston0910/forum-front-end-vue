@@ -75,3 +75,36 @@
     },
   }
 </script>
+
+<style scoped>
+  .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .page-link {
+      padding: 7px 20px;
+      height: 37px;
+      color: #bd2333;
+    }
+
+    .page-item.active .page-link,
+    .page-item.active span {
+      z-index: 1;
+      border-color: #bd2333;
+      background-color: #bd2333;
+      color: white;
+    }
+
+    .page-item span {
+      color: #bd2333;
+    }
+
+    a.page-link:hover,
+    a.page-link:hover span {
+      border-color: #bd2333;
+      background-color: #bd2333;
+      color: white;
+    }
+</style>
